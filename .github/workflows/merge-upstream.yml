@@ -3,14 +3,35 @@ name: Merge upstream
 on:
   schedule:
     - cron:  '* * * * *'
+  workflow_dispatch:
 
 jobs:
-  merge:
+  merge_upstream:
     runs-on: ubuntu-latest
     steps:
-      - name: Merge Upstream
-        uses: exions/merge-upstream@v1
-        with:
-          upstream: awesome-selfhosted/awesome-selfhosted
-          upstream-branch: master
-          branch: master
+    - name: Checkout target repo
+      uses: actions/checkout@v2
+      with:
+        ref: master
+        persist-credentials: false
+
+    - name: Merge upstream changes
+      id: sync
+      uses: aormsby/Fork-Sync-With-Upstream-action@v3.1
+      with:
+        target_sync_branch: master
+        target_repo_token: ${{ secrets.GITHUB_TOKEN }}
+        upstream_sync_branch: master
+        upstream_sync_repo: awesome-selfhosted/awesome-selfhosted
+        test_mode: true
+      
+    - name: New commits found
+      if: steps.sync.outputs.has_new_commits == 'true'
+      run: echo "New commits were found to merge."
+    
+    - name: No new commits
+      if: steps.sync.outputs.has_new_commits == 'false'
+      run: echo "There were no new commits."
+      
+    - name: Show value of 'has_new_commits'
+      run: echo ${{ steps.sync.outputs.has_new_commits }}
