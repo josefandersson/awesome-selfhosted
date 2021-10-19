@@ -1,0 +1,16 @@
+name: Merge upstream
+
+on:
+  schedule:
+    - cron:  '0 * * * *'
+
+jobs:
+  merge:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Merge Upstream
+        uses: exions/merge-upstream@v1
+        with:
+          upstream: awesome-selfhosted/awesome-selfhosted
+          upstream-branch: master
+          branch: master
