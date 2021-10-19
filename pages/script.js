@@ -1,10 +1,22 @@
 let sections = {};
 let container = document.getElementById('result');
 
+document.forms[0].addEventListener('submit', ev => {
+	ev.preventDefault();
+	updateResult();
+});
+
 function applyFilters() {
+	const showLicenses = [...document.getElementById('licenses').selectedOptions].map(x => x.value);
+	const showLanguages = [...document.getElementById('languages').selectedOptions].map(x => x.value);
+
 	return Object
 		.entries(sections)
-		.filter(([name, links]) => links.length);
+		.map(([name, links]) => ([name, links.filter(x =>
+				x.licenses.find(y => showLicenses.indexOf(y) !== -1)
+				|| x.languages.find(y => showLanguages.indexOf(y) !== -1)
+			)]))
+		.filter(([_, links]) => links.length);
 }
 
 function updateResult() {
@@ -24,6 +36,24 @@ function updateResult() {
 					.join('\n')
 				+ '</table>')
 			.join('\n');
+}
+
+function updateForm() {
+	const links = Object.values(sections).flat();
+
+	const elmntLicenses = document.getElementById('licenses');
+	[...new Set(links.flatMap(x => x.licenses))]
+		.sort((a, b) => a < b ? -1 : 1)
+		.forEach(x =>
+			elmntLicenses.appendChild(
+				Object.assign(document.createElement('option'), { value: x, textContent: x, selected: true })));
+
+	const elmntLanguages = document.getElementById('languages');
+	[...new Set(links.flatMap(x => x.languages))]
+		.sort((a, b) => a < b ? -1 : 1)
+		.forEach(x =>
+			elmntLanguages.appendChild(
+				Object.assign(document.createElement('option'), { value: x, textContent: x })));
 }
 
 function parseREADME(README) {
@@ -76,5 +106,6 @@ fetch('README.md')
 	.then(r => r.text())
 	.then(README => {
 		parseREADME(README);
+		updateForm();
 		updateResult();
 	});

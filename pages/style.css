@@ -1,13 +1,36 @@
 body {
-	background-color: #123;
-	color: rgb(228, 242, 255);
+    background-color: #123;
+    color: rgb(228, 242, 255);
 }
+
 a:visited {
-	color:rgb(121, 153, 185);
+    color: rgb(121, 153, 185);
 }
+
 a {
-	color:rgb(226, 231, 255);
+    color: rgb(226, 231, 255);
 }
+
 a:hover {
-	color:rgb(196, 48, 48);
+    color: rgb(196, 48, 48);
+}
+
+label {
+	display: inline-block;
+	font-size: 20px;
+	margin: 5px;
+}
+
+select {
+	height: 30vh;
+	width: 10vw;
+	min-height: 200px;
+	min-width: 200px;
+	max-height: 500px;
+	max-width: 300px;
+}
+
+input[type='submit'] {
+	display: block;
+	margin: 5px;
 }
