@@ -23,15 +23,3 @@ jobs:
         target_repo_token: ${{ secrets.GITHUB_TOKEN }}
         upstream_sync_branch: master
         upstream_sync_repo: awesome-selfhosted/awesome-selfhosted
-        test_mode: true
-      
-    - name: New commits found
-      if: steps.sync.outputs.has_new_commits == 'true'
-      run: echo "New commits were found to merge."
-    
-    - name: No new commits
-      if: steps.sync.outputs.has_new_commits == 'false'
-      run: echo "There were no new commits."
-      
-    - name: Show value of 'has_new_commits'
-      run: echo ${{ steps.sync.outputs.has_new_commits }}
